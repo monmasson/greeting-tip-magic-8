@@ -1,0 +1,56 @@
+const greetingData = [
+    {
+        id: 1,
+        name: '',
+        greeting: 'Hello'
+    },
+    {
+        id: 2,
+        name: '',
+        greeting: 'Wow'
+    },
+    {
+        id: 3,
+        name: '',
+        greeting: 'Hello There'
+    },
+]
+
+
+const express = require("express")
+const greetingRouter = express.Router()
+
+
+/* = GET => Return ALL data
+ * / = POST =>  Create => TAKE a post, return SAME POST AFTER adding it to the database
+ * /:id = GET => Return greeting that has that id (idx)
+ * /:id = PUT => UPDATE => Take a post & param, return CHANGED post
+ * /:id = DELETE => take param, DELETE from database, return 204 + message "Greeting  Successfully Deleted"
+ * 
+ */
+
+greetingRouter.route("/")
+    .get((req, res) => {
+        res.status(200).json({ greeting: greetingData })
+    })
+    .post((req, res) => {
+        // take a form
+        const body = req.body
+
+        greetingData.push(body)
+        res.status(201).json({msg : greetingData[greetingData.length - 1] })
+    })
+
+
+greetingRouter.route("/:name")
+    .get((req, res) => {
+        const id = req.params.name
+        if (id >= greetingData.length) {
+            res.status(404).json({ message: "No greetings" })
+        } else {
+            res.status(200).json({ msg: greetingData[id] })
+            
+        }
+    })
+
+    module.exports=greetingRouter
